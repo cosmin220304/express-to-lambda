@@ -1,0 +1,33 @@
+{
+  "name": "express-to-lambda",
+  "version": "1.0.0",
+  "main": "./lib/index.js",
+  "module": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "scripts": {
+    "prepare": "npm run build",
+    "build": "tsc && npm run copy-handler",
+    "copy-handler": "cp ./src/utils/handler.js ./lib/utils"
+  },
+  "devDependencies": {
+    "@types/node": "^20.2.3",
+    "typescript": "^5.0.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cosmin220304/express-to-lambda.git"
+  },
+  "type": "module",
+  "keywords": [
+    "cosmin",
+    "aftanase",
+    "express to lambda",
+    "express lambda"
+  ],
+  "author": "cosmin aftanase",
+  "license": "MIT",
+  "description": "",
+  "files": [
+    "lib/**/*"
+  ]
+}
