@@ -1,6 +1,6 @@
 {
   "name": "express-to-lambda",
-  "version": "1.0.1",
+  "version": "1.0.4",
   "main": "./lib/cjs/index.js",
   "module": "./lib/mjs/index.js",
   "exports": {
@@ -12,10 +12,8 @@
   "types": "./lib/index.d.ts",
   "scripts": {
     "prepare": "npm run build",
-    "build": "npm run clean && tsc -p tsconfig.json && npm run tsc && npm run copy-handler",
-    "clean": "rm -rf ./lib",
-    "tsc": "tsc -p tsconfig-cjs.json && ./fixup",
-    "copy-handler": "cp ./src/utils/handler.js ./lib/utils"
+    "build": "npm run clean && tsc -p tsconfig.json && tsc -p tsconfig-cjs.json && ./fixup",
+    "clean": "rm -rf ./lib"
   },
   "devDependencies": {
     "@types/node": "^20.2.3",

@@ -34,4 +34,4 @@ async function formatApplication(targetDirectory: string) {
   }
 }
 
-export default formatApplication;
+export { formatApplication };

@@ -1,3 +1,4 @@
+// @ts-nocheck
 export const handler = async (event) => {
   const request = {
     path: event.path,
