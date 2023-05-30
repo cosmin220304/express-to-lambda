@@ -1,12 +1,20 @@
 {
   "name": "express-to-lambda",
-  "version": "1.0.0",
-  "main": "./lib/index.js",
-  "module": "./lib/index.js",
+  "version": "1.0.1",
+  "main": "./lib/cjs/index.js",
+  "module": "./lib/mjs/index.js",
+  "exports": {
+    ".": {
+      "import": "./lib/mjs/index.js",
+      "require": "./lib/cjs/index.js"
+    }
+  },
   "types": "./lib/index.d.ts",
   "scripts": {
     "prepare": "npm run build",
-    "build": "tsc && npm run copy-handler",
+    "build": "npm run clean && tsc -p tsconfig.json && npm run tsc && npm run copy-handler",
+    "clean": "rm -rf ./lib",
+    "tsc": "tsc -p tsconfig-cjs.json && ./fixup",
     "copy-handler": "cp ./src/utils/handler.js ./lib/utils"
   },
   "devDependencies": {
@@ -19,8 +27,6 @@
   },
   "type": "module",
   "keywords": [
-    "cosmin",
-    "aftanase",
     "express to lambda",
     "express lambda"
   ],
