@@ -14,8 +14,6 @@ export function addHandler(
         ? "\r\nexports.handler = "
         : "\r\nexport const handler = ";
 
-      console.log(exportString);
-
       fs.writeFile(
         filePath,
         data.concat(exportString + handler.toString()),
