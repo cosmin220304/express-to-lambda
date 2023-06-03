@@ -1,5 +1,4 @@
-// @ts-nocheck
-export const handler = async (event) => {
+export const HANDLER = `async (event) => {
   const request = {
     path: event.path,
     body: event.body ? JSON.parse(event.body) : null,
@@ -41,3 +40,4 @@ export const handler = async (event) => {
       : response.textVal,
   };
 };
+`;

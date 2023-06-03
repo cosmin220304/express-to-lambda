@@ -1,6 +1,5 @@
 import fs from "fs";
-// @ts-ignore
-import { handler } from "./handler.js";
+import { HANDLER } from "./handler";
 
 export function addHandler(
   filePath: string,
@@ -16,7 +15,7 @@ export function addHandler(
 
       fs.writeFile(
         filePath,
-        data.concat(exportString + handler.toString()),
+        data.concat(exportString + HANDLER),
         "utf8",
         (err) => {
           if (err) return reject(err);
