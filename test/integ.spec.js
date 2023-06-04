@@ -54,7 +54,7 @@ describe("Test converter", () => {
     // Assert
     expect(response.statusCode).toBe(404);
     expect(response.body).toBe(
-      "Lambda didn't receive any event which contains path and/or http method!"
+      "Lambda didn't receive any event which contains a valid path or http method!"
     );
   });
 });

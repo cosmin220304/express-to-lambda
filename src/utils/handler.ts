@@ -1,8 +1,8 @@
 export const HANDLER = `async (event) => {
   const request = {
-    path: event.path,
+    path: event.requestContext?.http?.path ?? event.path,
     body: event.body ? JSON.parse(event.body) : null,
-    method: event.httpMethod,
+    method: event.requestContext?.http?.method ?? event.httpMethod,
     params: event.pathParameters,
     query: event.queryStringParameters,
     headers: event.headers,
@@ -11,7 +11,7 @@ export const HANDLER = `async (event) => {
   if (!request.path || !request.method) {
     return {
       statusCode: 404,
-      body: "Lambda didn't receive any event which contains path and/or http method!",
+      body: "Lambda didn't receive any event which contains a valid path or http method!",
     };
   }
 
