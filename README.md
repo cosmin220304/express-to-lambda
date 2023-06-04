@@ -2,7 +2,7 @@
 
 Simple package for converting your express application to an AWS Lambda.
 
-![](https://github.com/cosmin220304/express-to-lambda/blob/main/demo_gif.gif?raw=true)
+![](https://github.com/cosmin220304/express-to-lambda/blob/main/demo.gif?raw=true)
 
 ## How to use it
 
