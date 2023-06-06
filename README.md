@@ -9,7 +9,7 @@ Simple package for converting your express application to an AWS Lambda.
 Simply run the command as:
 
 ```js
-npx express-to-lambda@1.0.13 <target folder>
+npx express-to-lambda@latest <target folder>
 ```
 
 <ins>Note</ins>: has support for both commonJs and modules!
