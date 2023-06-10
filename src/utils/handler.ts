@@ -2,7 +2,9 @@ export const HANDLER = `async (event) => {
   const request = {
     path: event.requestContext?.http?.path ?? event.path,
     body: event.body ? JSON.parse(event.body) : null,
-    method: event.requestContext?.http?.method ?? event.httpMethod,
+    method:
+      event.requestContext?.http?.method ??
+      event.httpMethod,
     params: event.pathParameters,
     query: event.queryStringParameters,
     headers: event.headers,
@@ -42,12 +44,23 @@ export const HANDLER = `async (event) => {
     textVal: "",
   };
 
-  const router = app._router.stack.find(
-    ({ route }) =>
-      route &&
-      route.path === request.path &&
-      route.methods[request.method.toLowerCase()] === true
-  );
+  const router = app._router.stack
+    .flatMap((stack) => {
+      const ret = [];
+      if (stack.route) {
+        ret.push(stack);
+      }
+      if (stack.handle?.stack) {
+        ret.push(...stack.handle.stack);
+      }
+      return ret;
+    })
+    .find(
+      ({ route }) =>
+        route &&
+        route.path === request.path &&
+        route.methods[request.method.toLowerCase()] === true
+    );
 
   if (!router) {
     return {
