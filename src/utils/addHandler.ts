@@ -1,5 +1,4 @@
 import fs from "fs";
-import { HANDLER } from "./handler";
 
 export function addHandler(
   filePath: string,
@@ -10,12 +9,12 @@ export function addHandler(
       if (err) return reject(err);
 
       const exportString = isCommonJs
-        ? "\r\nexports.handler = "
-        : "\r\nexport const handler = ";
+        ? `\r\nexports.handler = require("express-to-lambda").adapter(app)`
+        : `\r\nexport const handler = (import "express-to-lambda").adapter(app)`;
 
       fs.writeFile(
         filePath,
-        data.concat(exportString + HANDLER),
+        data.concat(exportString),
         "utf8",
         (err) => {
           if (err) return reject(err);

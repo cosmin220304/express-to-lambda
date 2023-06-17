@@ -3,6 +3,7 @@ import { commentCode } from "./utils/commentCode";
 import { findFilesWithString } from "./utils/findFilesWithString";
 import { checkIfFolder } from "./utils/isFolder";
 import { appListenerRegex } from "./utils/regex";
+import { adapter } from "./utils/handler";
 
 function isCommonJs(targetDirectory: string): boolean {
   return !findFilesWithString(
@@ -30,4 +31,4 @@ async function convert(targetDirectory: string) {
   await addHandler(appIndex, isCommonJs(targetDirectory));
 }
 
-export { convert };
+export { convert, adapter };

@@ -1,6 +1,5 @@
 {
   "dependencies": {
-    "express": "^4.18.2",
-    "express-to-lambda": "^1.0.8"
+    "express": "^4.18.2"
   }
 }
