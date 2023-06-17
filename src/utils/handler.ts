@@ -1,4 +1,4 @@
-export const HANDLER = `async (event) => {
+export const HANDLER = `exports.handler = async (event) => {
   const request = {
     path: event.requestContext?.http?.path ?? event.path,
     body: event.body ? JSON.parse(event.body) : null,
@@ -9,6 +9,8 @@ export const HANDLER = `async (event) => {
     query: event.queryStringParameters,
     headers: event.headers,
   };
+  request.url = request.path;
+  if (request.query) request.url += "?" + request.query;
 
   if (!request.path || !request.method) {
     return {
@@ -17,7 +19,7 @@ export const HANDLER = `async (event) => {
     };
   }
 
-  const response = {
+  const response = (callback) => ({
     status: function (code) {
       this.statusVal = code;
       return this;
@@ -27,22 +29,30 @@ export const HANDLER = `async (event) => {
         this.statusVal = 200;
         this.isStatusSet = true;
       }
-      this.textVal = body;
-      return this;
+      if (typeof body === "object") this.bodyVal = body;
+      else this.textVal = body;
+      callback && callback(this);
     },
     json: function (body) {
-      if (!this.isStatusSet) {
-        this.statusVal = 200;
-        this.isStatusSet = true;
-      }
-      this.bodyVal = body;
+      this.send(body);
+    },
+    end: function () {
+      this.send("");
+    },
+    setHeader: function (header, value) {
+      this.headers.push([header, value]);
       return this;
     },
     isStatusSet: false,
     statusVal: 0,
     bodyVal: "",
     textVal: "",
-  };
+    headers: [],
+  });
+
+  const middlewares = app._router.stack
+    .filter((s) => s.handle && !s.handle.stack)
+    .map((s) => s.handle);
 
   const router = app._router.stack
     .flatMap((stack) => {
@@ -56,9 +66,9 @@ export const HANDLER = `async (event) => {
       return ret;
     })
     .find(
-      ({ route }) =>
+      ({ route, regexp }) =>
         route &&
-        route.path === request.path &&
+        regexp.test(request.path) &&
         route.methods[request.method.toLowerCase()] === true
     );
 
@@ -69,13 +79,34 @@ export const HANDLER = `async (event) => {
     };
   }
 
-  await router.handle(request, response, () => {});
+  const routeRegex = router.route.path; // /path/:id/subpath/:id2
+  const nonIdParams = routeRegex // [path, subpath]
+    .split("/")
+    .filter((route) => route && !route.startsWith(":"));
+  const idParams = request.path  // [<value of :id>, <value of :id2>]
+    .split("/")
+    .filter((path) => path && !nonIdParams.includes(path));
+  request.params = {};
+  for (let i = 0; i < router.keys.length; i++) {
+    const { name } = router.keys[i];
+    request.params[name] = idParams[i];
+  }
+
+  for (const middleware of middlewares) {
+    await new Promise((resolve) =>
+      middleware(request, response(resolve), resolve)
+    );
+  }
+
+  const res = await new Promise((resolve) =>
+    router.handle(request, response(resolve), resolve)
+  );
 
   return {
-    statusCode: response.statusVal,
-    body: response.bodyVal
-      ? JSON.stringify(response.bodyVal)
-      : response.textVal,
+    statusCode: res.statusVal,
+    body: res.bodyVal
+      ? JSON.stringify(res.bodyVal)
+      : res.textVal,
   };
 };
 `;
