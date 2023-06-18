@@ -49,6 +49,7 @@ export const adapter: Adapter =
     ) => ({
       status: function (code: number) {
         this.statusVal = code;
+        this.isStatusSet = true;
         return this;
       },
       send: function (body: string | object) {
@@ -124,14 +125,35 @@ export const adapter: Adapter =
       request.params[name] = idParams[i];
     }
 
+    let errorMiddleware: Function;
     for (const middleware of middlewares) {
+      if (
+        middleware
+          .toString()
+          .split("{")[0]
+          .includes("(err, req, res, next)")
+      ) {
+        errorMiddleware = middleware;
+        continue;
+      }
       await new Promise((resolve) =>
         middleware(request, response(resolve), resolve)
       );
     }
 
     const res = (await new Promise((resolve) =>
-      router.handle(request, response(resolve), resolve)
+      router.handle(
+        request,
+        response(resolve),
+        (err: any) =>
+          errorMiddleware &&
+          errorMiddleware(
+            err,
+            request,
+            response(resolve),
+            resolve
+          )
+      )
     )) as CustomResponse;
 
     return {

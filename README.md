@@ -2,43 +2,40 @@
 
 Simple package for converting your express application to an AWS Lambda.
 
-![](https://github.com/cosmin220304/express-to-lambda/blob/main/demo.gif?raw=true)
-
-## How to use it
-
-Simply run the command as:
+## Installation:
 
 ```js
-npx express-to-lambda@latest <target folder>
+npm i express-to-lambda@latest
 ```
 
-<ins>Note</ins>: has support for both commonJs and modules!
+## How to use it:
 
-Want to use it in your app?
+### Modules
 
 ```js
-// modules
-import { convert } from "express-to-lambda"
+import { adapter } from "express-to-lambda"
 
-convert(<folder name>);
+const app = express()
+
+[...]
+
+// app.listen(PORT)
+export const handler = adapter(app)
 ```
+
+### Common JS
 
 ```js
 // commonJs
-const { convert } = require("express-to-lambda")
+const { adapter } = require("express-to-lambda")
 
-convert(<folder name>);
+const app = express()
+
+[...]
+
+// app.listen(PORT)
+exports.handler = adapter(app)
 ```
-
-## What it does?
-
-(1) comments the app listener  
-(2) adds lambda handler to the express root
-
-## Future plans:
-
-⬜️ option to generate .zip file  
-⬜️ option for direct upload to aws using ~/.aws/config
 
 ## Bugs & suggestions
 

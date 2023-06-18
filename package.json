@@ -1,6 +1,6 @@
 {
   "name": "express-to-lambda",
-  "version": "1.0.18",
+  "version": "1.1.0",
   "main": "./lib/cjs/index.js",
   "module": "./lib/mjs/index.js",
   "bin": "./index.js",
@@ -35,7 +35,8 @@
     "express-to-lambda",
     "express-lambda",
     "converter",
-    "express to lambda converter"
+    "express to lambda converter",
+    "2023"
   ],
   "author": "cosmin aftanase",
   "license": "MIT",
